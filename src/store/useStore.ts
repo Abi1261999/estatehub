@@ -1,0 +1,4 @@
+import { create } from 'zustand';
+type Store = { wishlist:number[]; compare:number[]; toggleWishlist:(id:number)=>void; toggleCompare:(id:number)=>void; clearCompare:()=>void };
+const load = (key:string):number[] => { try { return JSON.parse(localStorage.getItem(key) || '[]'); } catch { return []; } };
+export const useStore = create<Store>((set,get)=>({ wishlist:load('estatehub-wishlist'), compare:load('estatehub-compare'), toggleWishlist:(id)=>{const wishlist=get().wishlist.includes(id)?get().wishlist.filter(x=>x!==id):[...get().wishlist,id];localStorage.setItem('estatehub-wishlist',JSON.stringify(wishlist));set({wishlist});}, toggleCompare:(id)=>{const current=get().compare;const compare=current.includes(id)?current.filter(x=>x!==id):current.length<3?[...current,id]:current;localStorage.setItem('estatehub-compare',JSON.stringify(compare));set({compare});},clearCompare:()=>{localStorage.setItem('estatehub-compare','[]');set({compare:[]});}}));
